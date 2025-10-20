@@ -1,0 +1,24 @@
+image: jangrewe/gitlab-ci-android:33
+
+stages:
+  - lint
+  - tests
+  - build_flavors
+  - release
+  - create_git_tag
+
+before_script:
+  - chmod +x ./gradlew
+
+runAndroidLint:
+  stage: lint
+  script:
+    - ./gradlew lint
+  artifacts:
+    paths:
+      - "**/lint-results.html"
+    expire_in: 10 days
+    when:
+      always
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
